@@ -1,28 +1,44 @@
-pipeline{
+pipeline {
     agent any
 
-    tools{
+    tools {
         nodejs "23.5.0"
     }
-    stages{
-        stage("Installing Dependencies"){
-            sh "npm i --no-audit"
+
+    environment {
+        PROJECT_DIR = "SOLAR-SYSTEM-GITEA"
+    }
+
+    stages {
+        stage("Installing Dependencies") {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh "npm i --no-audit"
+                }
+            }
         }
 
-        stage("Dependency Scanning"){
-            parallel{
-                stage("NPM Dependency Audit"){
-                    sh "npm audit --audit-level=critical"
+        stage("Dependency Scanning") {
+            parallel {
+                stage("NPM Dependency Audit") {
+                    steps {
+                        dir("${PROJECT_DIR}") {
+                            sh "npm audit --audit-level=critical"
+                        }
+                    }
                 }
 
-                stage("OWASP Dependency Check"){
-                    dependencyCheck additionalArguments: '''
-                        --scan \'./\'
-                        --out \'./\'
-                        --format \'ALL\'
-                        --prettyPrint''', odcInstallation: 'OWASP-DepCheck-12'
+                stage("OWASP Dependency Check") {
+                    steps {
+                        dir("${PROJECT_DIR}") {
+                            dependencyCheck additionalArguments: '''
+                                --scan \'./\'
+                                --out \'./\'
+                                --format \'ALL\'
+                                --prettyPrint''', odcInstallation: 'OWASP-DepCheck-12'
+                        }
+                    }
                 }
-
             }
         }
     }
