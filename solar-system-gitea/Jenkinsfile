@@ -6,14 +6,17 @@ pipeline {
     }
 
     environment {
-        PROJECT_DIR = "SOLAR-SYSTEM-GITEA"
+        PROJECT_DIR = "solar-system-gitea"
     }
 
     stages {
         stage("Installing Dependencies") {
             steps {
                 dir("${PROJECT_DIR}") {
-                    sh "npm i --no-audit"
+                    sh '''
+                        pwd
+                        npm i --no-audit
+                    '''
                 }
             }
         }
