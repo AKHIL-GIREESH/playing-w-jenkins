@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+
+    tools{
+        nodejs "23.5.0"
+    }
+    stages{
+        stage("Installing Dependencies"){
+            sh "npm i --no-audit"
+        }
+
+        stage("Dependency Scanning"){
+            parallel{
+                stage("NPM Dependency Audit"){
+                    sh "npm audit --audit-level=critical"
+                }
+
+                stage("OWASP Dependency Check"){
+                    dependencyCheck additionalArguments: '''
+                        --scan \'./\'
+                        --out \'./\'
+                        --format \'ALL\'
+                        --prettyPrint''', odcInstallation: 'OWASP-DepCheck-12'
+                }
+
+            }
+        }
+    }
+}
