@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs "23.5.0"
+    }
+
+    environment {
+        PROJECT_DIR = "testingApp1"
+    }
+
+    stages {
+        stage("Installing Dependencies") {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh '''
+                        pwd
+                        npm i --no-audit
+                    '''
+                }
+            }
+        }
+
+        stage("Dependency Scanning") {
+            parallel {
+                stage("NPM Dependency Audit") {
+                    steps {
+                        dir("${PROJECT_DIR}") {
+                            // sh "npm audit --audit-level=critical"
+                            sh "npm audit"
+                        }
+                    }
+                }
+
+                stage("OWASP Dependency Check") {
+                    steps {
+                        dir("${PROJECT_DIR}") {
+                            dependencyCheck additionalArguments: '''
+                                --scan \'./\'
+                                --out \'./\'
+                                --format \'ALL\'
+                                --prettyPrint''', odcInstallation: 'OWASP-DepCheck-12'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Unit Testing'){
+            steps{
+                dir("${PROJECT_DIR}") {
+                        sh 'npx vitest'
+                        junit allowEmptyResults: true, testResults: 'test-results.xml'
+                }
+            }
+        }
+    }
+}
