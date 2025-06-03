@@ -47,11 +47,13 @@ pipeline {
 
         stage('Unit Testing'){
             steps{
-                withCredentials([usernamePassword(credentialsId: 'mongo-alt', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                    sh 'npm test'
-                }
+                dir("${PROJECT_DIR}") {
+                    withCredentials([usernamePassword(credentialsId: 'mongo-alt', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                        sh 'npm test'
+                    }
 
-                junit allowEmptyResults: true, testResults: 'test-results.xml'
+                    junit allowEmptyResults: true, testResults: 'test-results.xml'
+                }
             }
         }
     }
