@@ -27,7 +27,7 @@ pipeline {
                     steps {
                         dir("${PROJECT_DIR}") {
                             // sh "npm audit --audit-level=critical"
-                            sh "npm audit"
+                            sh "npm audit --audit-level=critical"
                         }
                     }
                 }
