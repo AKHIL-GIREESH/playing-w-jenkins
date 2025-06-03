@@ -54,5 +54,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Code Coverage'){
+            steps{
+                dir("${PROJECT_DIR}"){
+                    catchError(buildResult: 'SUCCESS', message: 'Coverage less than threshold', stageResult: 'UNSTABLE') {
+                        sh 'npx vitest run --coverage'
+                    }
+                }
+            }
+        }
     }
 }
