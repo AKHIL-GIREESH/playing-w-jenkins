@@ -8,6 +8,7 @@ pipeline {
 
     environment {
         PROJECT_DIR = "testingApp1"
+        SONNAR_SCANNER_HOME = tool 'sonarqube-710'
     }
 
     stages {
@@ -68,15 +69,14 @@ pipeline {
         stage('SAST - SonarQube'){
             steps{
                 dir("${PROJECT_DIR}"){
-                    withSonarQubeEnv('sonarqube-710') {
-                        sh '''
-                            sonar-scanner \
-                                -Dsonar.projectKey=reactTesting \
-                                -Dsonar.sources=. \
-                                -Dsonar.host.url=$SONAR_HOST_URL \
-                                -Dsonar.token=$SONAR_AUTH_TOKEN
-                        '''
-                    }
+                    sh 'echo $SONARY_SCANNER_HOME'
+                    sh '''
+                        $SONNAR_SCANNER_HOME/bin/sonar-scanner \
+                            -Dsonar.projectKey=reactTesting \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=$SONAR_HOST_URL \
+                            -Dsonar.token=$SONAR_AUTH_TOKEN
+                    '''
                 }
             }
         }
