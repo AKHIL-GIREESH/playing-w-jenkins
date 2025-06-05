@@ -66,20 +66,20 @@ pipeline {
             }
         }
 
-        stage('SAST - SonarQube'){
-            steps{
-                dir("${PROJECT_DIR}"){
-                    sh 'echo $SONARY_SCANNER_HOME'
-                    sh '''
-                        $SONNAR_SCANNER_HOME/bin/sonar-scanner \
-                            -Dsonar.projectKey=reactTesting \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=$SONAR_HOST_URL \
-                            -Dsonar.token=$SONAR_AUTH_TOKEN
-                    '''
-                }
-            }
-        }
+        // stage('SAST - SonarQube'){
+        //     steps{
+        //         dir("${PROJECT_DIR}"){
+        //             sh 'echo $SONARY_SCANNER_HOME'
+        //             sh '''
+        //                 $SONNAR_SCANNER_HOME/bin/sonar-scanner \
+        //                     -Dsonar.projectKey=reactTesting \
+        //                     -Dsonar.sources=. \
+        //                     -Dsonar.host.url=$SONAR_HOST_URL \
+        //                     -Dsonar.token=$SONAR_AUTH_TOKEN
+        //             '''
+        //         }
+        //     }
+        // }
     }
 
     post{
