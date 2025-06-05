@@ -84,7 +84,7 @@ pipeline {
         stage("Docker Build Image"){
             steps{
                dir("${PROJECT_DIR}"){
-                    sh 'docker built -t akhilgireesh/reactTestingNew:$GIT_COMMIT .'
+                    sh 'docker build -t akhilgireesh/reactTestingNew:$GIT_COMMIT .'
                 } 
             }
         }
