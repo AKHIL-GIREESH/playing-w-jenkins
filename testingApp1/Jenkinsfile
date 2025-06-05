@@ -50,7 +50,6 @@ pipeline {
             steps{
                 dir("${PROJECT_DIR}") {
                         sh 'npx vitest'
-                        junit allowEmptyResults: true, testResults: 'test-results.xml'
                 }
             }
         }
@@ -63,6 +62,26 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage('SAST - SonarQube'){
+            steps{
+                dir("${PROJECT_DIR}"){
+                        sh '''
+                        sonar-scanner \
+                            -Dsonar.projectKey=reactTesting \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://localhost:9000 \
+                            -Dsonar.token=sqp_141c826c1820a9e5ba1219649d71ca29d04d610a
+                        '''
+                }
+            }
+        }
+    }
+
+    post{
+        always{
+            junit allowEmptyResults: true, testResults: 'test-results.xml'
         }
     }
 }
