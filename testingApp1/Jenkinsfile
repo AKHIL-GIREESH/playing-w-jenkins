@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         nodejs "23.5.0"
-        sonarqube "sonarqube-710"
+        // sonarqube "sonarqube-710"
     }
 
     environment {
@@ -68,13 +68,15 @@ pipeline {
         stage('SAST - SonarQube'){
             steps{
                 dir("${PROJECT_DIR}"){
+                    withSonarQubeEnv('sonarqube-710') {
                         sh '''
-                        sonar-scanner \
-                            -Dsonar.projectKey=reactTesting \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://localhost:9000 \
-                            -Dsonar.token=sqp_141c826c1820a9e5ba1219649d71ca29d04d610a
+                            sonar-scanner \
+                                -Dsonar.projectKey=reactTesting \
+                                -Dsonar.sources=. \
+                                -Dsonar.host.url=$SONAR_HOST_URL \
+                                -Dsonar.token=$SONAR_AUTH_TOKEN
                         '''
+                    }
                 }
             }
         }
