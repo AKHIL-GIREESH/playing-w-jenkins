@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         nodejs "23.5.0"
+        sonarqube "sonarqube-710"
     }
 
     environment {
