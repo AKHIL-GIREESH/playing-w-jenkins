@@ -89,13 +89,16 @@ pipeline {
             }
         }
 
-        stage("Push Docker Image"){
-            steps{
-               dir("${PROJECT_DIR}"){
-                    withDockerRegistry(credentialsId: 'dockerhub-creds', url: ''){
-                        sh 'docker push akhilgireesh/reacttestingnew:$GIT_COMMIT'
-                    }                
-                } 
+        stage("Push Docker Image") {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                            docker push akhilgireesh/reacttestingnew:$GIT_COMMIT
+                        '''
+                    }
+                }
             }
         }
     }
